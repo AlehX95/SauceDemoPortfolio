@@ -1,0 +1,39 @@
+# === IDE & Editor Configuration ===
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+
+# === Build Output ===
+target/
+bin/
+out/
+
+# === Logs & Reports ===
+logs/
+*.log
+reports/
+extent-report/
+*.html
+test-output/
+
+# === Browser Drivers ===
+drivers/
+chromedriver.exe
+geckodriver.exe
+msedgedriver.exe
+
+# === Temporary Files ===
+*.tmp
+*.swp
+*.bak
+*.old
+
+# === System Files ===
+.DS_Store
+Thumbs.db
+
+# === Environment / Config Files ===
+.env
+*.properties.local
