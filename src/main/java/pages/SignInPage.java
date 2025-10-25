@@ -1,12 +1,14 @@
 package pages;
 
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import base.Base;
 
 public class SignInPage extends Base {
+
+	private static final Logger logger = LogManager.getLogger(SignInPage.class);
 
 	By usernameLocator = By.id("user-name");
 	By passwordLocator = By.id("password");
@@ -32,38 +34,52 @@ public class SignInPage extends Base {
 
 	public boolean signIn(String username, String password) {
 		if (!isDisplayed(logoTitle)) {
-			System.out.println("❌ Sign In Page no fue encontrada");
+			logger.error("❌ Couldnt find the login page.");
 			return false;
 		}
+		logger.info("Trying to login with the user: {}", username);
 		type(username, usernameLocator);
 		type(password, passwordLocator);
 		click(logInButton);
-		// Espera el resultado: preferimos chequear la Home o el Error
-		// isHomePageDisplayed() / isErrorDisplayed() ya usan waits en Base
+	
 		if (isHomePageDisplayed()) {
-			System.out.println("✅ Sign in exitoso para: " + username);
+			logger.info(" Successful login for user: {}", username);
 			return true;
 		} else if (isErrorDisplayed()) {
-			System.out.println("❌ Login fallido para: " + username + " - Mensaje: " + getText(errorMsg));
+			logger.warn("⚠️ Login error for '{}': {}", username, getText(errorMsg));
 			return false;
 		} else {
-			// fallback: no apareció home ni error (posible timeout)
-			System.out.println("⚠️ Resultado de login incierto para: " + username);
-			return false;
-		}
-	}
-	
-	
-	public boolean signOut() {
-		if (!isDisplayed(menuBtn)) {
-			System.out.println("❌ El botón del menú no está visible. No se puede cerrar sesión.");
+			
+			logger.warn("⚠️ Uncertain login result. No success or visible error was detected for '{}'.",
+					username);
 			return false;
 		}
 
-		click(menuBtn);
-		click(logOutBtnMenu);
-		System.out.println("✅ Sign out realizado correctamente.");
-		return true;
+	}
+
+	public boolean signOut() {
+		try {
+			if (!isDisplayed(menuBtn)) {
+				logger.warn("⚠️ Menu button not visible. Cannot log out.");
+				return false;
+			}
+
+			click(menuBtn);
+			click(logOutBtnMenu);
+
+			
+			if (isLoginPageDisplayed()) {
+				logger.info("Logout successful.");
+				return true;
+			} else {
+				logger.warn("⚠️ An attempt was made to log out, but the login page was not detected.");
+				return false;
+			}
+
+		} catch (Exception e) {
+			logger.error("❌ Error trying to log out: ", e);
+			return false;
+		}
 	}
 
 	public boolean isLoginPageDisplayed() {
@@ -71,5 +87,3 @@ public class SignInPage extends Base {
 	}
 
 }
-
-

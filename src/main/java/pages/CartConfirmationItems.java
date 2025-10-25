@@ -7,10 +7,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import base.Base;
 
 public class CartConfirmationItems extends Base {
+
+	private static final Logger logger = LogManager.getLogger(CartConfirmationItems.class);
 
 	By cartTitle = By.className("title");
 	By cartItems = By.cssSelector("[data-test='inventory-item-name']");
@@ -25,9 +28,9 @@ public class CartConfirmationItems extends Base {
 
 	public boolean isCartPageDisplayed() {
 		if (isDisplayed(cartTitle))
-			System.out.println("🟢 Cart Page visible");
+			logger.info("Cart Page is visible.");
 		else
-			System.out.println("❌ Cart Page no visible");
+			logger.error("❌ Cart Page is not visible.");
 		return isDisplayed(cartTitle);
 	}
 
@@ -37,7 +40,7 @@ public class CartConfirmationItems extends Base {
 			int actualCount = Integer.parseInt(badge.getText().trim());
 			return actualCount == expectedCount;
 		} catch (NoSuchElementException e) {
-			// Si no aparece el badge (por ejemplo, carrito vacío)
+			// If badge is missing (empty cart)
 			return expectedCount == 0;
 		}
 	}
@@ -53,11 +56,12 @@ public class CartConfirmationItems extends Base {
 
 		for (String name : expectedProducts) {
 			if (!itemTexts.contains(name.trim().toLowerCase())) {
-				return false; // Falta uno
+				logger.error("❌ Expected product '{}' not found in cart.", name);
+				return false;
 			}
 		}
-		System.out.println("✅ Todos los productos esperados están en el carrito");
-		return true; // Todos están
+		logger.info("All expected products are present in the cart.");
+		return true;
 	}
 
 	public boolean containsProduct(String productName) {
@@ -65,11 +69,11 @@ public class CartConfirmationItems extends Base {
 		List<WebElement> items = driver.findElements(cartItems);
 		for (WebElement item : items) {
 			if (item.getText().trim().equalsIgnoreCase(productName)) {
-				System.out.println("✅ Producto encontrado: " + productName);
+				logger.info("Product found in cart: {}", productName);
 				return true;
 			}
 		}
-		System.out.println("❌ Producto no encontrado: " + productName);
+		logger.error("❌ Product not found in cart: {}", productName);
 		return false;
 	}
 
@@ -86,54 +90,53 @@ public class CartConfirmationItems extends Base {
 	public boolean removeProduct(By removeButtonLocator, int expectedCountAfterRemove) {
 		try {
 			if (!isDisplayed(removeButtonLocator)) {
-				System.out.println("❌ Botón de remover no visible");
+				logger.error("❌ Remove button not visible.");
 				return false;
 			}
 
 			click(removeButtonLocator);
-			System.out.println("🗑️ Producto eliminado del carrito");
+			logger.info("Product removed from cart.");
 
 			if (isCartCountCorrect(expectedCountAfterRemove)) {
-				System.out.println("✅ Contador actualizado correctamente a " + expectedCountAfterRemove);
+				logger.info("Cart count updated correctly to {}", expectedCountAfterRemove);
 				return true;
 			} else {
-				System.out.println("❌ Contador NO coincide tras remover producto");
+				logger.error("❌ Cart count does not match expected value after removal.");
 				return false;
 			}
 
 		} catch (Exception e) {
-			System.out.println("❌ Error al intentar remover: " + e.getMessage());
+			logger.error("❌ Error removing product from cart: {}", e.getMessage(), e);
 			return false;
 		}
 	}
 
 	public boolean isCartEmpty() {
 		if (driver.findElements(cartItems).isEmpty())
-			System.out.println("🟢 Carrito vacío");
+			logger.info("Cart is empty.");
 		else
-			System.out.println("❌ Carrito tiene productos");
+			logger.error("❌ Cart is not empty.");
 		return driver.findElements(cartItems).isEmpty();
 	}
 
 	public boolean continueShopping(List<String> expectedProducts) {
 		if (areProductsInCart(expectedProducts) && isCartCountCorrect(expectedProducts.size())) {
 			click(continueShoppingBtn);
-			System.out.println("✅ Productos verificados correctamente. Continuando con la compra.");
+			logger.info("Products verified. Continuing shopping.");
 			return true;
 		} else {
-			System.out.println("❌ Error: productos o cantidad incorrecta.");
+			logger.error("❌ Error: Products missing or count incorrect in cart.");
 			return false;
 		}
 	}
 
 	public boolean checkoutShopping(List<String> expectedProducts) {
 		if (areProductsInCart(expectedProducts) && isCartCountCorrect(expectedProducts.size())) {
-
 			click(checkoutBtn);
-			System.out.println("Productos verificados correctamente. Continuando con la compra.");
+			logger.info("Products verified. Proceeding to checkout.");
 			return true;
 		} else {
-			System.out.println("Error: el carrito no tiene los productos correctos o la cantidad no coincide.");
+			logger.error("❌ Error: Cart does not contain correct products or quantity mismatch.");
 			return false;
 		}
 	}

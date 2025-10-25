@@ -3,13 +3,14 @@ package utils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class UserDataFetcher {
+	
+	private static final Logger logger = LogManager.getLogger(DatabaseConnection.class);
 
-    /**
-     * Obtiene las credenciales de un usuario según su nombre.
-     * Si no se especifica nombre, devuelve el primer registro encontrado.
-     */
+
     public static String[] getUserCredentials(String username) {
         String[] credentials = new String[2];
 
@@ -29,13 +30,13 @@ public class UserDataFetcher {
             if (rs.next()) {
                 credentials[0] = rs.getString("username");
                 credentials[1] = rs.getString("password");
-                System.out.println("✅ Credenciales obtenidas de la DB para: " + credentials[0]);
+                logger.info("User credentials fetched successfully from DB for user: {}", credentials[0]);
             } else {
-                System.out.println("⚠️ No se encontró el usuario: " + username);
+                logger.warn("No user found in DB for username: {}", username);
             }
 
         } catch (Exception e) {
-            System.out.println("❌ Error al obtener credenciales desde la base de datos: " + e.getMessage());
+        	logger.error("Error fetching user credentials from DB: {}", e.getMessage(), e);
         }
 
         return credentials;

@@ -1,15 +1,17 @@
 package pages;
 
-
 import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import base.Base;
 
 public class ProductsPage extends Base {
+
+	private static final Logger logger = LogManager.getLogger(ProductsPage.class);
 
 	// Locators
 
@@ -51,48 +53,48 @@ public class ProductsPage extends Base {
 
 	// Generic add product
 
-	 public boolean addProduct(By addButtonLocator) {
-	        if (!isProductsPageDisplayed()) {
-	            System.out.println("❌ No se puede agregar producto: Products Page no visible.");
-	            return false;
-	        }
-	        try {
-	            click(addButtonLocator);
-	            System.out.println("✅ Producto agregado correctamente: " + addButtonLocator);
-	            return true;
-	        } catch (Exception e) {
-	            System.out.println("⚠️ Error al agregar producto: " + e.getMessage());
-	            return false;
-	        }
-	    }
+	public boolean addProduct(By addButtonLocator) {
+		if (!isProductsPageDisplayed()) {
+			logger.error("❌ Cannot add product: Products Page is not visible.");
+			return false;
+		}
+		try {
+			click(addButtonLocator);
+			logger.info("Product added successfully: {}", addButtonLocator);
+			return true;
+		} catch (Exception e) {
+			logger.error("❌ Error adding product: {}", e.getMessage(), e);
+			return false;
+		}
+	}
 
 	// Generic remove product
-	 public boolean removeProductFromMainPage(By removeButtonLocator) {
-	        if (!isProductsPageDisplayed()) {
-	            System.out.println("❌ Products Page no está visible.");
-	            return false;
-	        }
-	        try {
-	            click(removeButtonLocator);
-	            System.out.println("🗑️ Producto eliminado desde el Main Page: " + removeButtonLocator);
-	            return true;
-	        } catch (Exception e) {
-	            System.out.println("⚠️ Error al eliminar producto: " + e.getMessage());
-	            return false;
-	        }
-	    }
-
-	  public boolean removeBackpackFromMainPage() {
-	        return removeProductFromMainPage(removeBackpackBtnFromMainPage);
+	public boolean removeProductFromMainPage(By removeButtonLocator) {
+		if (!isProductsPageDisplayed()) {
+			logger.error("❌ Cannot remove product: Products Page is not visible.");
+			return false;
+		}
+		try {
+			click(removeButtonLocator);
+			logger.info("Product removed successfully from Main Page: {}", removeButtonLocator);
+			return true;
+		} catch (Exception e) {
+			logger.error("❌ Error removing product from Main Page: {}", e.getMessage(), e);
+			return false;
+		}
 	}
 
-	  public boolean removeAllThesethingsTshirtFromMainPage() {
-	        return removeProductFromMainPage(removeAllthesethingsTshirtBtnFromMaonPage);
+	public boolean removeBackpackFromMainPage() {
+		return removeProductFromMainPage(removeBackpackBtnFromMainPage);
 	}
 
-	  public boolean removeSauceLabsTshirtFromMainPage() {
-	        return removeProductFromMainPage(removeSaucelabsTshirtBtnFromMainPage);
-	    }
+	public boolean removeAllThesethingsTshirtFromMainPage() {
+		return removeProductFromMainPage(removeAllthesethingsTshirtBtnFromMaonPage);
+	}
+
+	public boolean removeSauceLabsTshirtFromMainPage() {
+		return removeProductFromMainPage(removeSaucelabsTshirtBtnFromMainPage);
+	}
 
 	// Get current cart count from badge
 	public int getCartCount() {
@@ -107,61 +109,61 @@ public class ProductsPage extends Base {
 	// Specific Product Flows
 
 	// From Detail Page
-    public boolean addBackpackFromDetailPage() {
-        try {
-            if (isDisplayed(titleLocator)) {
-                click(backPackLink);
-                click(addToCartDetailBtn);
-                click(backToProductsBtn);
-                System.out.println("🎒 Backpack agregado desde detalle correctamente.");
-                return true;
-            } else {
-                System.out.println("❌ Products Page no está visible.");
-                return false;
-            }
-        } catch (Exception e) {
-            System.out.println("⚠️ Error al agregar backpack desde detalle: " + e.getMessage());
-            return false;
-        }
-    }
-    public boolean addTshirtLabsBoltFromDetailPage() {
-        try {
-            if (isDisplayed(titleLocator)) {
-                click(boltTshirtLink);
-                click(addToCartDetailBtn);
-                click(backToProductsBtn);
-                System.out.println("👕 T-shirt Labs Bolt agregada desde detalle correctamente.");
-                return true;
-            } else {
-                System.out.println("❌ Products Page no está visible.");
-                return false;
-            }
-        } catch (Exception e) {
-            System.out.println("⚠️ Error al agregar T-shirt Labs Bolt desde detalle: " + e.getMessage());
-            return false;
-        }
-    }
+	public boolean addBackpackFromDetailPage() {
+		try {
+			if (isDisplayed(titleLocator)) {
+				click(backPackLink);
+				click(addToCartDetailBtn);
+				click(backToProductsBtn);
+				logger.info("Backpack added successfully from detail page.");
+				return true;
+			} else {
+				logger.error("❌ Cannot add backpack: Products Page is not visible.");
+				return false;
+			}
+		} catch (Exception e) {
+			logger.error("❌ Error adding backpack from detail page: {}", e.getMessage(), e);
+			return false;
+		}
+	}
+
+	public boolean addTshirtLabsBoltFromDetailPage() {
+		try {
+			if (isDisplayed(titleLocator)) {
+				click(boltTshirtLink);
+				click(addToCartDetailBtn);
+				click(backToProductsBtn);
+				logger.info("T-shirt Labs Bolt added successfully from detail page.");
+				return true;
+			} else {
+				logger.error("❌ Products Page is not visible.");
+				return false;
+			}
+		} catch (Exception e) {
+			logger.error("❌ Error adding T-shirt Labs Bolt from detail page: {}", e.getMessage(), e);
+			return false;
+		}
+	}
 
 	// From Main Page
-    public boolean addTshirtRedFromMainPage() {
-        return addProduct(addAllthesethingsTshirtBtnMain);
-    }
+	public boolean addTshirtRedFromMainPage() {
+		return addProduct(addAllthesethingsTshirtBtnMain);
+	}
 
-
-  //Go to Cart
-    public boolean goToViewCartPage() {
-        try {
-            if (isDisplayed(titleLocator)) {
-                click(shoppingCartLink);
-                System.out.println("🛒 Navegando a la vista del carrito...");
-                return true;
-            } else {
-                System.out.println("❌ Products Page no está visible.");
-                return false;
-            }
-        } catch (Exception e) {
-            System.out.println("⚠️ Error al intentar ir al carrito: " + e.getMessage());
-            return false;
-        }
-    }
+	// Go to Cart
+	public boolean goToViewCartPage() {
+		try {
+			if (isDisplayed(titleLocator)) {
+				click(shoppingCartLink);
+				 logger.info("Navigating to the cart page.");
+				return true;
+			} else {
+				logger.error("❌ Cannot navigate to cart: Products Page is not visible.");
+				return false;
+			}
+		} catch (Exception e) {
+			logger.error("❌ Error while trying to navigate to the cart page: {}", e.getMessage(), e);
+			return false;
+		}
+	}
 }
