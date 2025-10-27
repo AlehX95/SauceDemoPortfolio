@@ -12,11 +12,14 @@ public class UserDataFetcher {
 
 
     public static String[] getUserCredentials(String username) {
-        String[] credentials = new String[2];
+        String[] credentials = new String[2];  // [0]=username, [1]=password
 
-        String query = (username == null || username.isEmpty())
-                ? "SELECT username, password FROM users LIMIT 1"
-                : "SELECT username, password FROM users WHERE username = ? LIMIT 1";
+        String query;
+        if (username == null || username.isEmpty()) {
+            query = "SELECT username, password FROM users LIMIT 1";
+        } else {
+            query = "SELECT username, password FROM users WHERE username = ? LIMIT 1";
+        }
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
