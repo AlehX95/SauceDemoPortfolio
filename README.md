@@ -3,7 +3,8 @@
 ## Overview
 
 This project automates functional tests for the [SauceDemo](https://www.saucedemo.com/) web application using **Selenium WebDriver** with **Java** and **JUnit**.  
-It is designed as a modular and scalable framework following the **Page Object Model (POM)** pattern, integrating **ExtentReports** for reporting and **Log4j** for logging.
+It is designed as a modular and scalable framework following the **Page Object Model (POM)** pattern, integrating **ExtentReports** for reporting and **Log4j** for logging, and a **MySQL database** for dynamic user data retrieval.
+
 
 The project demonstrates a full end-to-end testing workflow — from login and product interactions to checkout — making it ideal for QA automation portfolios or CI/CD integration.
 
@@ -14,12 +15,15 @@ The project demonstrates a full end-to-end testing workflow — from login and p
 ```
 SauceDemoPortfolio/
 │
-├── base/                     # Base classes (browser setup, configuration)
-├── pages/                    # Page Object Model classes (SignIn, Products, Cart, etc.)
-├── tests/                    # JUnit test classes organized by feature
-├── utils/                    # Utility classes (ExtentReports, DB, helpers)
-├── reports/                  # Auto-generated ExtentReports HTML output
-└── resources/                # Optional configs, drivers, and environment data
+├── base/ # Base classes (browser setup, waits, driver handling)
+├── pages/ # Page Object Model classes (SignIn, Products, Cart, etc.)
+├── tests/ # JUnit test classes organized by feature
+├── utils/ # Utilities (ExtentReports, DB connection, helpers)
+├── src/test/resources/
+│ ├── config/ # config.properties (DB credentials)
+│ └── database/ # saucedb_example.sql (optional DB structure)
+├── reports/ # Auto-generated ExtentReports HTML files
+└── pom.xml # Maven dependencies and project configuration
 ```
 
 ---
@@ -31,23 +35,23 @@ SauceDemoPortfolio/
 - **JUnit 4** – test structure and assertions  
 - **ExtentReports** – detailed and visual HTML reports  
 - **Log4j** – structured logging for test monitoring  
-- **Database Integration** – user credentials fetched dynamically  
+- **Database Integration** – reads credentials from a MySQL database  
+- **Secure Configuration** – credentials stored in `config.properties` (not pushed to GitHub)
 - **CI/CD Ready** – compatible with Jenkins for automated execution  
 
 ---
 
 ## Technologies Used
-
 | Category        | Tools / Libraries               |
 |-----------------|---------------------------------|
-| Programming     | Java 17+                        |
+| Programming     | Java 19                         |
 | Automation      | Selenium WebDriver              |
 | Testing         | JUnit 4                         |
-| Reporting       | ExtentReports                   |
-| Logging         | Log4j 2                         |
+| Reporting       | ExtentReports 5.1.1             |
+| Logging         | Log4j2 2.23.1                   |
+| ORM / Data      | MySQL JDBC                      |
 | Build Tool      | Maven                           |
 | CI/CD           | Jenkins (optional)              |
-
 ---
 
 ## How to Run Tests
