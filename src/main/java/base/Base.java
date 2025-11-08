@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-public class Base {
+public class Base { 
 
 	protected WebDriver driver;
 	private WebDriverWait wait;
