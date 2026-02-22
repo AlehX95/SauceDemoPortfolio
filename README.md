@@ -22,7 +22,7 @@ SauceDemoPortfolio/
 ├── src/test/resources/
 │ ├── config/ # config.properties (DB credentials)
 │ └── database/ # saucedb_example.sql (optional DB structure)
-├── reports/ # Auto-generated ExtentReports HTML files 
+├── reports/ # Auto-generated ExtentReports HTML files  
 └── pom.xml # Maven dependencies and project configuration
 ```
 
