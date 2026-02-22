@@ -57,6 +57,13 @@
     <version>8.0.33</version>
 </dependency>
 
+		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-testng</artifactId>
+			<version>2.29.0</version>
+			<scope>test</scope>
+		</dependency>
+
 
 <dependency>
     <groupId>org.projectlombok</groupId>
@@ -115,6 +122,10 @@
             <value>false</value>
           </property>
         </properties>
+
+		  <systemPropertyVariables>
+			  <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+		  </systemPropertyVariables>
 
       </configuration>
     </plugin>

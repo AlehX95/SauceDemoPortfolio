@@ -19,6 +19,11 @@ pipeline {
     always {
       archiveArtifacts artifacts: 'target/surefire-reports/**/*', allowEmptyArchive: true
       junit 'target/surefire-reports/*.xml'
+          allure([
+      includeProperties: false,
+      jdk: '',
+      results: [[path: 'target/allure-results']]
+    ])
     }
   }
 }
